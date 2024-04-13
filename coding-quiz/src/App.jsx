@@ -1,7 +1,7 @@
 import "./App.css";
 import ContactEditor from "./components/ContactEditor";
 import ContactList from "./components/ContactList";
-import { useReducer, useRef } from "react";
+import { useReducer, useRef, useCallback } from "react";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -17,7 +17,8 @@ function reducer(state, action) {
 function App() {
   const [contents, dispatch] = useReducer(reducer, []);
   const idRef = useRef(0);
-  const onCreate = (name, contact) => {
+
+  const onCreate = useCallback((name, contact) => {
     dispatch({
       type: "CREATE",
       data: {
@@ -26,13 +27,13 @@ function App() {
         contact,
       },
     });
-  };
-  const onRemove = (targetId) => {
+  }, []);
+  const onRemove = useCallback((targetId) => {
     dispatch({
       type: "REMOVE",
-      targetId,
+      targetId: targetId,
     });
-  };
+  }, []);
   return (
     <div className="App">
       <h2>Contact List</h2>
